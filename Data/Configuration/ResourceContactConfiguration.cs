@@ -52,6 +52,11 @@ namespace MigrateTOUData.Data.Configuration
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("phone_ext");
+            builder.Property(e => e.Fax)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("fax");
             builder.Property(e => e.Suffix)
                 .HasMaxLength(25)
                 .IsUnicode(false)

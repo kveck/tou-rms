@@ -9,11 +9,13 @@ next_resource_id int DEFAULT 1,
 website_url varchar(2083),
 email varchar(320),
 phone char(10),
+fax char(10),
 
 
 CONSTRAINT pk_org_id PRIMARY KEY(org_id),
 -- light weight check that phone is all nubmers, data layer will do specific check
 CONSTRAINT valid_phone CHECK (phone like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+CONSTRAINT valid_fax CHECK (fax like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 CONSTRAINT valid_next_res_id CHECK (next_resource_id > 0)
 );
 
@@ -69,10 +71,13 @@ org_title varchar(128),
 phone char(10),
 phone_ext varchar(10),
 mobile char(10),
+fax char(10),
 email varchar(320), 
 
 CONSTRAINT pk_resource_contact PRIMARY KEY(contact_id),
-CONSTRAINT valid_contact_phone CHECK (phone like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+CONSTRAINT valid_contact_phone CHECK (phone like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+CONSTRAINT valid_contact_mobile CHECK (mobile like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+CONSTRAINT valid_contact_fax CHECK (fax like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 );
 GO
 

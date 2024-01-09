@@ -47,6 +47,12 @@ namespace MigrateTOUData.Data.Configuration
                 .IsUnicode(false)
                 .HasMaxLength(10)
                 .IsFixedLength();
+            builder.Property(org => org.Fax)
+                .HasColumnName("fax")
+                .IsRequired(false)
+                .IsUnicode(false)
+                .HasMaxLength(10)
+                .IsFixedLength();
             builder.Property(org => org.NextResourceId)
                 .HasColumnName("next_resource_id")
                 .HasDefaultValue(1);

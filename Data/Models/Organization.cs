@@ -21,6 +21,8 @@ public partial class Organization
 
     public string Phone { get; set; }
 
+    public string Fax { get; set; }
+
     public virtual ICollection<OrganizationAddress> OrganizationAddresses { get; set; } = new List<OrganizationAddress>();
 
     public virtual ICollection<ResourceProgram> ResourcePrograms { get; set; } = new List<ResourceProgram>();

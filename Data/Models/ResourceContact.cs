@@ -24,6 +24,8 @@ public partial class ResourceContact
 
     public string Mobile { get; set; }
 
+    public string Fax { get; set; }
+
     public string Email { get; set; }
 
     public virtual ICollection<ContactWithLanguage> ContactWithLanguages { get; set; } = new List<ContactWithLanguage>();
