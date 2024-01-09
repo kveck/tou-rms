@@ -15,7 +15,7 @@ public partial class ResourceProgram
 
     public string Name { get; set; }
 
-    public string ResourceLink { get; set; }
+    public string ResourceUrl { get; set; }
 
     public string Description { get; set; }
 

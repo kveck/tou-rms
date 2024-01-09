@@ -42,10 +42,10 @@ namespace MigrateTOUData.Data.Configuration
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("resource_id");
-            builder.Property(e => e.ResourceLink)
+            builder.Property(e => e.ResourceUrl)
                 .HasMaxLength(2083)
                 .IsUnicode(false)
-                .HasColumnName("resource_link");
+                .HasColumnName("resource_url");
             builder.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(25)

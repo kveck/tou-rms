@@ -32,7 +32,7 @@ namespace MigrateTOUData.Data.Configuration
                 .HasMaxLength(6)
                 .IsFixedLength();
             builder.Property(org => org.Url)
-                .HasColumnName("website_link")
+                .HasColumnName("website_url")
                 .IsRequired(false)
                 .IsUnicode(false)
                 .HasMaxLength(2083);
