@@ -28,6 +28,11 @@ namespace MigrateTOUData.Data.Database
             
             // resource tables
             builder.ApplyConfiguration(new ResourceProgramConfiguration());
+            builder.ApplyConfiguration(new ResourceProgramDetailsConfiguration());
+            builder.ApplyConfiguration(new ResourceProcessTimeConfiguration());
+            builder.ApplyConfiguration(new ResourceProgramDescriptionConfiguration());
+            builder.ApplyConfiguration(new ResourceProgramNotesConfiguration());
+            builder.ApplyConfiguration(new ResourceProgramStepConfiguration());
             builder.ApplyConfiguration(new ResourceWithLanguageConfiguration());
             builder.ApplyConfiguration(new ResourceWithContactConfiguration());
             builder.ApplyConfiguration(new ResourceWithApplicationTypeConfiguration());
@@ -56,10 +61,10 @@ namespace MigrateTOUData.Data.Database
             builder.ApplyConfiguration(new ServiceTaxonomyConfiguration());
 
             // user tables
-            builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new UserDetailConfiguration());
-            builder.ApplyConfiguration(new UserRoleConfiguration());
-            builder.ApplyConfiguration(new UserWithResourceFavoriteConfiguration());
+            //builder.ApplyConfiguration(new UserConfiguration());
+            //builder.ApplyConfiguration(new UserDetailConfiguration());
+            //builder.ApplyConfiguration(new UserRoleConfiguration());
+            //builder.ApplyConfiguration(new UserWithResourceFavoriteConfiguration());
             
 
             base.OnModelCreating(builder);

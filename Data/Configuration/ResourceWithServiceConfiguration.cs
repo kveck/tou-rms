@@ -15,7 +15,7 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.Id).HasName("pk_servicetaxon_resource_xref");
 
-            builder.ToTable("service_taxonomy_resource_xref");
+            builder.ToTable("service_taxonomy_resource_xref", "rms");
 
             builder.Property(e => e.Id).HasColumnName("id");
             builder.Property(e => e.ResourceId).HasColumnName("resource_id");

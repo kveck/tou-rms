@@ -15,7 +15,7 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.Id).HasName("pk_resource_contact_xref");
 
-            builder.ToTable("resource_contact_xref");
+            builder.ToTable("resource_contact_xref", "rms");
 
             builder.HasIndex(e => new { e.ContactId, e.ResourceId }, "uq_resource_contact").IsUnique();
 

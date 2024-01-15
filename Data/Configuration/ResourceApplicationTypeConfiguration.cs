@@ -15,7 +15,7 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.Id).HasName("pk_resource_application_type");
 
-            builder.ToTable("resource_application_type");
+            builder.ToTable("resource_application_type", "rms");
 
             builder.Property(e => e.Id).HasColumnName("id");
             builder.Property(e => e.ApplicationType)

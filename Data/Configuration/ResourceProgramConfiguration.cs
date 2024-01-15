@@ -15,33 +15,22 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.Id).HasName("pk_resource_program");
 
-            builder.ToTable("resource_program");
+            builder.ToTable("resource_program", "rms");
 
             builder.Property(e => e.Id).HasColumnName("id");
-            builder.Property(e => e.Cost)
-                .HasMaxLength(128)
-                .IsUnicode(false)
-                .HasColumnName("cost");
-            builder.Property(e => e.Description)
-                .HasMaxLength(512)
-                .IsUnicode(false)
-                .HasColumnName("description");
             builder.Property(e => e.Name)
                 .HasMaxLength(256)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            builder.Property(e => e.Notes)
-                .IsUnicode(false)
-                .HasColumnName("notes");
             builder.Property(e => e.OrgId)
                 .HasColumnName("org_id")
                 .IsRequired();
-            builder.Property(e => e.ResourceId)
+            builder.Property(e => e.ResourceCode)
                 .IsRequired()
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .IsFixedLength()
-                .HasColumnName("resource_id");
+                .HasColumnName("resource_code");
             builder.Property(e => e.ResourceUrl)
                 .HasMaxLength(2083)
                 .IsUnicode(false)

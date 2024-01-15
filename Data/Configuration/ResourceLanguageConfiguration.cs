@@ -15,7 +15,7 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.Id).HasName("pk_resource_language");
 
-            builder.ToTable("resource_language");
+            builder.ToTable("resource_language", "rms");
 
             builder.Property(e => e.Id).HasColumnName("language_id");
             builder.Property(e => e.LanguageName)

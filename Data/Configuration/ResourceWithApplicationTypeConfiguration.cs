@@ -15,7 +15,7 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.Id).HasName("pk_resource_application_type_xref");
 
-            builder.ToTable("resource_application_type_xref");
+            builder.ToTable("resource_application_type_xref", "rms");
 
             builder.HasIndex(e => new { e.ApplicationTypeId, e.ResourceId }, "uq_resource_application_type").IsUnique();
 

@@ -9,19 +9,13 @@ public partial class ResourceProgram
 {
     public int Id { get; set; }
 
-    public string ResourceId { get; set; }
+    public int ResourceCode { get; set; }
 
     public int OrgId { get; set; }
 
     public string Name { get; set; }
 
     public string ResourceUrl { get; set; }
-
-    public string Description { get; set; }
-
-    public string Cost { get; set; }
-
-    public string Notes { get; set; }
 
     public string Status { get; set; }
 
@@ -31,7 +25,15 @@ public partial class ResourceProgram
 
     public virtual Organization Org { get; set; }
 
-    public virtual ICollection<ResourceWithRegion> ResourceWithRegions { get; set; } = new List<ResourceWithRegion>();
+    public virtual ICollection<ResourceProgramDetail> ProgramDetails { get; set; } = new List<ResourceProgramDetail>();
+
+    public virtual ICollection<ResourceProgramDescription> Descriptions { get; set; } = new List<ResourceProgramDescription>();
+    
+    public virtual ICollection<ResourceProgramNote> ResourceProgramNotes { get; set; } = new List<ResourceProgramNote>();
+
+    public virtual ICollection<ResourceProgramStep> ResourceProgramSteps { get; set; } = new List<ResourceProgramStep>();
+
+public virtual ICollection<ResourceWithRegion> ResourceWithRegions { get; set; } = new List<ResourceWithRegion>();
 
     public virtual ICollection<ResourceWithApplicationType> ResourceWithApplicationTypes { get; set; } = new List<ResourceWithApplicationType>();
 

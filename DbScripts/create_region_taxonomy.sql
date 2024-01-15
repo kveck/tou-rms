@@ -11,7 +11,7 @@ GO
 
 CREATE TABLE region_taxonomy(
 taxonomy_id int IDENTITY(1,1),
-region varchar(126) NOT NULL,
+region nvarchar(126) NOT NULL,
 taxonomy_left int NOT NULL,
 taxonomy_right int NOT NULL,
 

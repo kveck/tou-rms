@@ -12,7 +12,7 @@ GO
 
 CREATE TABLE user_vss_role(
 id	int	IDENTITY(1,1),
-user_role varchar(25) NOT NULL
+user_role nvarchar(25) NOT NULL
 
 CONSTRAINT pk_user_role_id PRIMARY KEY(id),
 CONSTRAINT uq_role UNIQUE(user_role)
@@ -31,9 +31,9 @@ GO
 
 CREATE TABLE user_vss(
 id	int	IDENTITY(1,1),
-resource_user_id varchar(256) NOT NULL, -- Unique, Stores salt value for hashing password, UUID
+resource_user_id nvarchar(256) NOT NULL, -- Unique, Stores salt value for hashing password, UUID
 role_id int NOT NULL,
-username varchar(25) NOT NULL,
+username nvarchar(25) NOT NULL,
 timestamp_last_update datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 timestamp_created datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 
@@ -48,11 +48,11 @@ GO
 CREATE TABLE user_detail(
 id	int	IDENTITY(1,1),
 resource_user_id int NOT NULL,
-first_name varchar(50),
-last_name varchar(50),
-email varchar(320) NOT NULL,
+first_name nvarchar(50),
+last_name nvarchar(50),
+email nvarchar(320) NOT NULL,
 phone char(10),
-photo_location varchar(250), --URL of location in Azure blob storage
+photo_location nvarchar(250), --URL of location in Azure blob storage
 
 CONSTRAINT pk_user_details_id PRIMARY KEY(id),
 CONSTRAINT fk_user_id_details FOREIGN KEY(resource_user_id) REFERENCES user_vss(id),
@@ -81,7 +81,7 @@ CREATE TABLE user_resource_favorites(
 id	int	IDENTITY(1,1),
 resource_user_id int NOT NULL,
 resource_id int NOT NULL,
-notes varchar(512)
+notes nvarchar(512)
 
 CONSTRAINT pk_user_resource_favorites_id PRIMARY KEY(id),
 CONSTRAINT fk_user_id_resource_favorites FOREIGN KEY(resource_user_id) REFERENCES user_vss(id),
@@ -97,7 +97,7 @@ id	int	IDENTITY(1,1),
 resource_user_id int NOT NULL,
 resource_id int NOT NULL,
 rating tinyint NOT NULL,
-details varchar(512),
+details nvarchar(512),
 timestamp_last_update datetime2(3) DEFAULT(getutcdate()), -- stored value is UTC
 timestamp_created datetime2(3) DEFAULT(getutcdate()), -- stored value is UTC
 

@@ -15,7 +15,7 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.Id).HasName("pk_resource_contact");
 
-            builder.ToTable("resource_contact");
+            builder.ToTable("resource_contact", "rms");
 
             builder.Property(e => e.Id).HasColumnName("contact_id");
             builder.Property(e => e.Email)

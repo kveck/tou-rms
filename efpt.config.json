@@ -7,7 +7,7 @@
    "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "Models",
+   "OutputPath": "ToolsModels",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "MigrateTOUData",
    "Schemas": null,
@@ -16,95 +16,91 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[contact_language_xref]",
+         "Name": "[rms].[contact_language_xref]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[organization]",
+         "Name": "[rms].[organization]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[organization_address]",
+         "Name": "[rms].[organization_address]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[region_taxonomy]",
+         "Name": "[rms].[region_taxonomy]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[region_taxonomy_contact_xref]",
+         "Name": "[rms].[region_taxonomy_contact_xref]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[region_taxonomy_resource_xref]",
+         "Name": "[rms].[region_taxonomy_resource_xref]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[resource_application_type]",
+         "Name": "[rms].[resource_application_type]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[resource_application_type_xref]",
+         "Name": "[rms].[resource_application_type_xref]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[resource_contact]",
+         "Name": "[rms].[resource_contact]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[resource_contact_xref]",
+         "Name": "[rms].[resource_contact_xref]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[resource_language]",
+         "Name": "[rms].[resource_language]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[resource_language_xref]",
+         "Name": "[rms].[resource_language_xref]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[resource_program]",
+         "Name": "[rms].[resource_process_time]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[service_taxonomy]",
+         "Name": "[rms].[resource_program]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[service_taxonomy_resource_xref]",
+         "Name": "[rms].[resource_program_description]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[situation_taxonomy]",
+         "Name": "[rms].[resource_program_details]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[situation_taxonomy_resource_xref]",
+         "Name": "[rms].[resource_program_notes]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[user_detail]",
+         "Name": "[rms].[resource_program_steps]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[user_resource_favorites]",
+         "Name": "[rms].[service_taxonomy]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[user_resource_rating]",
+         "Name": "[rms].[service_taxonomy_resource_xref]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[user_security]",
+         "Name": "[rms].[situation_taxonomy]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[user_vss]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[user_vss_role]",
+         "Name": "[rms].[situation_taxonomy_resource_xref]",
          "ObjectType": 0
       }
    ],

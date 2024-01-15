@@ -14,7 +14,7 @@ namespace MigrateTOUData.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Organization> builder)
         {
-            builder.ToTable("organization");
+            builder.ToTable("organization", "rms");
             builder.HasKey(org => org.Id).HasName("pk_org_id");
             builder.Property(org => org.Id)
                 .HasColumnName("org_id")

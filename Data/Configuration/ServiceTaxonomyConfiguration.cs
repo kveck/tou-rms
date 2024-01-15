@@ -15,7 +15,7 @@ namespace MigrateTOUData.Data.Configuration
         {
             builder.HasKey(e => e.TaxonomyId).HasName("pk_service_taxonomy");
 
-            builder.ToTable("service_taxonomy");
+            builder.ToTable("service_taxonomy", "rms");
 
             builder.HasIndex(e => e.TaxonomyLeft, "uq_service_taxonomy_left").IsUnique();
 

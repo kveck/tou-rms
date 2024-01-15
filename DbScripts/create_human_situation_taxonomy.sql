@@ -12,7 +12,7 @@ GO
 
 CREATE TABLE situation_taxonomy(
 taxonomy_id int IDENTITY(1,1),
-situation varchar(126) NOT NULL,
+situation nvarchar(126) NOT NULL,
 taxonomy_left int NOT NULL,
 taxonomy_right int NOT NULL,
 
