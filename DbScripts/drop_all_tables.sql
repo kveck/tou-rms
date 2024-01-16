@@ -1,15 +1,28 @@
 USE touResourceDatabase
 GO
-DROP TABLE IF EXISTS resource_contact_xref;
-DROP TABLE IF EXISTS region_taxonomy_contact_xref;
-DROP TABLE IF EXISTS region_taxonomy_resource_xref;
-DROP TABLE IF EXISTS service_taxonomy_resource_xref;
-DROP TABLE IF EXISTS situation_taxonomy_resource_xref;
-DROP TABLE IF EXISTS resource_application_type_xref;
-DROP TABLE IF EXISTS resource_language_xref;
-DROP TABLE IF EXISTS contact_language_xref;
-DROP TABLE IF EXISTS user_resource_xref;
+
+-- drop fk constraints
+ALTER TABLE [rms].[resource_program_steps] DROP CONSTRAINT [fk_resource_id_steps]
 GO
+ALTER TABLE [rms].[resource_program_detail] DROP CONSTRAINT [fk_resource_steps_id_detail]
+GO
+ALTER TABLE [rms].[resource_program_detail] DROP CONSTRAINT [fk_resource_process_time_id_detail]
+GO
+ALTER TABLE [rms].[resource_program_detail] DROP CONSTRAINT [fk_resource_id_detail]
+GO
+ALTER TABLE [rms].[resource_program_detail] DROP CONSTRAINT [fk_resource_description_id_detail]
+GO
+ALTER TABLE [rms].[resource_program_detail] DROP CONSTRAINT [fk_internal_notes_id_detail]
+GO
+ALTER TABLE [rms].[resource_program_description] DROP CONSTRAINT [fk_resource_id_description]
+GO
+ALTER TABLE [rms].[resource_program] DROP CONSTRAINT [fk_resource_status_id]
+GO
+ALTER TABLE [rms].[resource_program] DROP CONSTRAINT [fk_resource_organization_id]
+GO
+ALTER TABLE [rms].[resource_program] DROP CONSTRAINT [fk_resource_detial_id]
+GO
+
 DROP TABLE IF EXISTS rms.resource_contact_xref;
 DROP TABLE IF EXISTS rms.region_taxonomy_contact_xref;
 DROP TABLE IF EXISTS rms.region_taxonomy_resource_xref;
@@ -20,32 +33,24 @@ DROP TABLE IF EXISTS rms.resource_language_xref;
 DROP TABLE IF EXISTS rms.contact_language_xref;
 DROP TABLE IF EXISTS rms.user_resource_xref;
 GO
-DROP TABLE IF EXISTS user_resource_favorites;
-DROP TABLE IF EXISTS user_resource_rating;
-DROP TABLE IF EXISTS user_security;
-DROP TABLE IF EXISTS user_preference;
-DROP TABLE IF EXISTS user_detail;
-DROP TABLE IF EXISTS user_vss;
-DROP TABLE IF EXISTS user_vss_role;
-GO
-DROP TABLE IF EXISTS region_taxonomy;
-DROP TABLE IF EXISTS situation_taxonomy;
-DROP TABLE IF EXISTS service_taxonomy;
-DROP TABLE IF EXISTS resource_application_type;
-DROP TABLE IF EXISTS resource_language;
-DROP TABLE IF EXISTS resource_contact;
-GO
 DROP TABLE IF EXISTS rms.region_taxonomy;
 DROP TABLE IF EXISTS rms.situation_taxonomy;
 DROP TABLE IF EXISTS rms.service_taxonomy;
 DROP TABLE IF EXISTS rms.resource_application_type;
+DROP TABLE IF EXISTS rms.resource_process_time;
+DROP TABLE IF EXISTS rms.resource_status;
 DROP TABLE IF EXISTS rms.resource_language;
 DROP TABLE IF EXISTS rms.resource_contact;
 GO
-DROP TABLE IF EXISTS rms.resource_program;
-DROP TABLE IF EXISTS rms.resource_program;
-DROP TABLE IF EXISTS rms.resource_program_details;
+
+DROP TABLE IF EXISTS rms.resource_program_description;
+DROP TABLE IF EXISTS rms.resource_program_note;
+DROP TABLE IF EXISTS rms.resource_program_steps;
 DROP TABLE IF EXISTS rms.resource_process_time;
+GO
+
+DROP TABLE IF EXISTS rms.resource_program_detail;
+DROP TABLE IF EXISTS rms.resource_program;
 GO
 
 DROP TABLE IF EXISTS rms.organization_address;

@@ -40,7 +40,7 @@ GO
 -- table contains resource process time categories
 CREATE TABLE rms.resource_process_time(
 id int IDENTITY(1,1),
-time_category nvarchar(50)
+time_category nvarchar(50) NOT NULL,
 
 CONSTRAINT pk_resource_process_id PRIMARY KEY(id),
 CONSTRAINT uq_time_category UNIQUE(time_category)
@@ -57,42 +57,42 @@ INSERT INTO rms.resource_process_time(time_category)
 	('More than a month');
 GO
 
--- table contains all resources (programs) offered by an organization
-CREATE TABLE rms.resource_program (
-id int IDENTITY(10000,1),
-resource_code INT NOT NULL,
-org_id int NOT NULL,
-name nvarchar(256),
-resource_url nvarchar(3000),
-status nvarchar(25) NOT NULL,
-timestamp_last_update datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
-timestamp_created datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
+-- table contains resource status categories
+CREATE TABLE rms.resource_status(
+id int IDENTITY(1,1),
+status nvarchar(50) NOT NULL,
 
-CONSTRAINT pk_resource_program PRIMARY KEY(id),
-CONSTRAINT fk_resource_organization_id FOREIGN KEY (org_id) REFERENCES rms.organization(org_id),
-CONSTRAINT uq_resource_code UNIQUE(resource_code)
+CONSTRAINT pk_resource_status_id PRIMARY KEY(id),
+CONSTRAINT uq_status UNIQUE(status)
 );
+GO
+
+INSERT INTO rms.resource_status(status) 
+	VALUES 
+	('Verified'),
+	('Deleted'),
+	('Pending');
 GO
 
 -- table contains the resource (program) description
 -- stored in a seperate table because it needs to use a nvarchar(max) field and does not need to be queried
 CREATE TABLE rms.resource_program_description(
 id int IDENTITY(1,1),
-resource_id INT NOT NULL,
+resource_detail_id INT NOT NULL,
 description nvarchar(max),
 CONSTRAINT pk_resource_program_description PRIMARY KEY(id),
-CONSTRAINT fk_resource_id_description FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id),
+CONSTRAINT uq_resource_id_description UNIQUE(resource_detail_id)
 );
 GO
 
 -- table contains the resource (program) internal notes by CR
 -- stored in a seperate table because it needs to use a nvarchar(max) field and does not need to be queried
-CREATE TABLE rms.resource_program_notes(
+CREATE TABLE rms.resource_program_note(
 id int IDENTITY(1,1),
-resource_id INT NOT NULL,
+resource_detail_id INT NOT NULL,
 internal_notes nvarchar(max),
 CONSTRAINT pk_resource_program_notes PRIMARY KEY(id),
-CONSTRAINT fk_resource_id_notes FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id),
+CONSTRAINT uq_resource_detail_id_notes UNIQUE(resource_detail_id)
 );
 GO
 
@@ -100,29 +100,85 @@ GO
 -- stored in a seperate table because it needs to use a nvarchar(max) field and does not need to be queried
 CREATE TABLE rms.resource_program_steps(
 id int IDENTITY(1,1),
-resource_id INT NOT NULL,
+resource_detail_id INT NOT NULL,
 process_steps nvarchar(max),
 CONSTRAINT pk_resource_program_steps PRIMARY KEY(id),
-CONSTRAINT fk_resource_id_steps FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id),
+CONSTRAINT uq_resource_id_steps UNIQUE(resource_detail_id)
 );
 GO
 
 
 -- table contains the resource (program) details
-CREATE TABLE rms.resource_program_details (
+CREATE TABLE rms.resource_program_detail (
 id int IDENTITY(1,1),
-resource_id INT NOT NULL,
+resource_id int NOT NULL,
 process_time_id int,
+description_id int,
+process_steps_id int,
+internal_notes_id int,
 cost nvarchar(128),
 customer_service_rating tinyint, 
 obtainability_rating tinyint, 
 
-CONSTRAINT pk_resource_program_details PRIMARY KEY(id),
-CONSTRAINT fk_resource_id_details FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id),
-CONSTRAINT fk_resource_process_time_id FOREIGN KEY (process_time_id) REFERENCES rms.resource_process_time(id),
+CONSTRAINT pk_resource_program_detail PRIMARY KEY(id),
+CONSTRAINT uq_resource_id_detail UNIQUE(resource_id),
+CONSTRAINT uq_process_time_id_detail UNIQUE(process_time_id),
+CONSTRAINT uq_resource_description_id_detail UNIQUE(description_id),
+CONSTRAINT uq_resource_steps_id_detail UNIQUE(process_steps_id),
+CONSTRAINT uq_resource_notes_id_detail UNIQUE(internal_notes_id),
 );
 GO
 
+-- table contains all resources (programs) offered by an organization
+CREATE TABLE rms.resource_program (
+id int IDENTITY(10000,1),
+resource_code INT NOT NULL,
+org_id int NOT NULL,
+detail_id int NOT NULL, 
+name nvarchar(256),
+resource_url nvarchar(3000),
+status_id int NOT NULL,
+timestamp_last_update datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
+timestamp_created datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
+
+CONSTRAINT pk_resource_program PRIMARY KEY(id),
+CONSTRAINT fk_resource_organization_id FOREIGN KEY (org_id) REFERENCES rms.organization(org_id),
+CONSTRAINT uq_org_id UNIQUE(org_id),
+CONSTRAINT fk_resource_detial_id FOREIGN KEY (detail_id) REFERENCES rms.resource_program_detail(id),
+CONSTRAINT uq_detail_id UNIQUE(detail_id),
+CONSTRAINT fk_resource_status_id FOREIGN KEY (status_id) REFERENCES rms.resource_status(id),
+CONSTRAINT uq_status_id_resource UNIQUE(status_id),
+CONSTRAINT uq_resource_code UNIQUE(resource_code)
+);
+GO
+
+ALTER TABLE rms.resource_program_description
+ADD CONSTRAINT fk_resource_id_description FOREIGN KEY (resource_detail_id) REFERENCES rms.resource_program_detail(id);
+GO
+
+ALTER TABLE rms.resource_program_note
+ADD CONSTRAINT fk_resource_id_notes FOREIGN KEY (resource_detail_id) REFERENCES rms.resource_program_detail(id);
+GO
+
+ALTER TABLE rms.resource_program_steps
+ADD CONSTRAINT fk_resource_id_steps FOREIGN KEY (resource_detail_id) REFERENCES rms.resource_program_detail(id);
+GO
+
+ALTER TABLE rms.resource_program_detail
+ADD CONSTRAINT fk_resource_id_detail FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id);
+
+ALTER TABLE rms.resource_program_detail
+ADD CONSTRAINT fk_resource_process_time_id_detail FOREIGN KEY (process_time_id) REFERENCES rms.resource_process_time(id);
+
+ALTER TABLE rms.resource_program_detail
+ADD CONSTRAINT fk_resource_description_id_detail  FOREIGN KEY (description_id) REFERENCES rms.resource_program_description(id);
+
+ALTER TABLE rms.resource_program_detail
+ADD CONSTRAINT fk_resource_steps_id_detail  FOREIGN KEY (process_steps_id) REFERENCES rms.resource_program_steps(id);
+
+ALTER TABLE rms.resource_program_detail
+ADD CONSTRAINT fk_internal_notes_id_detail  FOREIGN KEY (internal_notes_id) REFERENCES rms.resource_program_note(id);
+GO
 
 CREATE TABLE rms.resource_contact(
 contact_id int IDENTITY(1,1),
