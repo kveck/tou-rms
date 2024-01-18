@@ -2,7 +2,7 @@ USE touResourceDatabase
 GO
 
 CREATE TABLE rms.organization(
-org_id	int	IDENTITY(1,1),
+id	int	IDENTITY(1,1),
 org_name nvarchar(512),
 website_url nvarchar(2083),
 email nvarchar(320),
@@ -10,7 +10,7 @@ phone char(10),
 fax char(10),
 
 
-CONSTRAINT pk_org_id PRIMARY KEY(org_id),
+CONSTRAINT pk_org_id PRIMARY KEY(id),
 -- light weight check that phone is all nubmers, data layer will do specific check
 CONSTRAINT valid_phone CHECK (phone like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 CONSTRAINT valid_fax CHECK (fax like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
@@ -29,7 +29,7 @@ zip_ext char(4),
 country nvarchar(256),
 
 CONSTRAINT pk_org_address_id PRIMARY KEY(id),
-CONSTRAINT fk_organization_id FOREIGN KEY (org_id) REFERENCES rms.organization(org_id),
+CONSTRAINT fk_organization_id FOREIGN KEY (org_id) REFERENCES rms.organization(id),
 -- light weight check that zip and zip extension are all nubmers, data layer will do specific check
 CONSTRAINT valid_org_zip CHECK (zip like '[0-9][0-9][0-9][0-9][0-9]'),
 CONSTRAINT valid_org_zip_ext CHECK (zip_ext like '[0-9][0-9][0-9][0-9]')
@@ -58,21 +58,36 @@ INSERT INTO rms.resource_process_time(time_category)
 GO
 
 -- table contains resource status categories
-CREATE TABLE rms.resource_status(
+CREATE TABLE rms.resource_status_type(
 id int IDENTITY(1,1),
-status nvarchar(50) NOT NULL,
+status_type nvarchar(50) NOT NULL,
 
-CONSTRAINT pk_resource_status_id PRIMARY KEY(id),
-CONSTRAINT uq_status UNIQUE(status)
+CONSTRAINT pk_resource_status_type_id PRIMARY KEY(id),
+CONSTRAINT uq_status UNIQUE(status_type)
 );
 GO
 
-INSERT INTO rms.resource_status(status) 
+INSERT INTO rms.resource_status_type(status_type) 
 	VALUES 
 	('Verified'),
 	('Deleted'),
 	('Pending');
 GO
+
+-- table contains log of status changes for a resource
+CREATE TABLE rms.resource_program_status(
+id int IDENTITY(1,1),
+resource_id int NOT NULL, 
+status_type_id int NOT NULL,
+[timestamp] datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
+notes nvarchar(1024), -- optional note about the status change
+cms_user nvarchar(128), -- not sure what this field is yet, need user from CMS system
+
+CONSTRAINT pk_resource_status_id PRIMARY KEY(id),
+CONSTRAINT fk_status_type_id FOREIGN KEY (status_type_id) REFERENCES rms.resource_status_type(id),
+);
+GO
+
 
 -- table contains the resource (program) description
 -- stored in a seperate table because it needs to use a nvarchar(max) field and does not need to be queried
@@ -142,15 +157,93 @@ timestamp_last_update datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored val
 timestamp_created datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 
 CONSTRAINT pk_resource_program PRIMARY KEY(id),
-CONSTRAINT fk_resource_organization_id FOREIGN KEY (org_id) REFERENCES rms.organization(org_id),
+CONSTRAINT fk_resource_organization_id FOREIGN KEY (org_id) REFERENCES rms.organization(id),
 CONSTRAINT uq_org_id UNIQUE(org_id),
 CONSTRAINT fk_resource_detial_id FOREIGN KEY (detail_id) REFERENCES rms.resource_program_detail(id),
 CONSTRAINT uq_detail_id UNIQUE(detail_id),
-CONSTRAINT fk_resource_status_id FOREIGN KEY (status_id) REFERENCES rms.resource_status(id),
+CONSTRAINT fk_resource_status_id FOREIGN KEY (status_id) REFERENCES rms.resource_program_status(id),
 CONSTRAINT uq_status_id_resource UNIQUE(status_id),
 CONSTRAINT uq_resource_code UNIQUE(resource_code)
 );
 GO
+
+-- table contains a mapping for legacy resource codes to RMS system resource code
+-- in the case of duplicates, a single resource_id can have multiple legacy_code values
+CREATE TABLE rms.resource_code_legacy(
+id int IDENTITY(1,1),
+resource_id int NOT NULL,
+legacy_code int NOT NULL
+
+CONSTRAINT pk_resource_code_legacy PRIMARY KEY(id),
+CONSTRAINT fk_resource_id_legacy FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id),
+CONSTRAINT uq_legacy_code UNIQUE(legacy_code),
+);
+GO
+
+-- table contains a list of different activities that are referenced in the resource_activity table
+CREATE TABLE rms.resource_activity_type(
+id int IDENTITY(1,1),
+activity_type nvarchar(50) NOT NULL,
+
+CONSTRAINT pk_resource_activity_type PRIMARY KEY(id),
+CONSTRAINT uq_activity_type UNIQUE(activity_type)
+);
+GO
+
+INSERT INTO rms.resource_activity_type(activity_type) 
+	VALUES 
+	('Add Organization'),
+	('Edit Organization'),
+	('Delete Organization'),
+	('Add Organization Address'),
+	('Edit Organization Address'),
+	('Delete Organization Address'),
+	('Add Resource'),
+	('Edit Resource'),
+	('Delete Resource'),
+	('Recommend Resource'),
+	('Add Resource Contact'),
+	('Edit Resource Contact'),
+	('Delete Resource Contact');
+GO
+
+
+-- table contains the JSON data that describes the activity, linked to a record in resource_activity
+CREATE TABLE rms.resource_activity_detail(
+id int IDENTITY(1,1),
+activity_id int NOT NULL,
+activity_detail nvarchar(max) NOT NULL,
+[timestamp] datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
+
+CONSTRAINT pk_resource_resource_activity_detail PRIMARY KEY(id),
+);
+GO
+
+-- table contains a log of activity for each resource. Activity includes: Add, Update, Delete, Recommend
+CREATE TABLE rms.resource_activity(
+id int IDENTITY(1,1),
+resource_id int NOT NULL,
+activity_type_id int NOT NULL,
+activity_detail_id int NOT NULL,
+cms_user nvarchar(128) NOT NULL,
+[timestamp] datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
+
+CONSTRAINT pk_resource_resource_activity PRIMARY KEY(id),
+CONSTRAINT fk_resource_id_activity FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id),
+CONSTRAINT fk_activity_detail_id FOREIGN KEY (activity_detail_id) REFERENCES rms.resource_activity_detail(id),
+CONSTRAINT uq_activity_detail_id UNIQUE(activity_detail_id),
+CONSTRAINT fk_activity_type_id FOREIGN KEY (activity_type_id) REFERENCES rms.resource_activity_type(id),
+);
+GO
+
+ALTER TABLE rms.resource_program_status
+ADD CONSTRAINT fk_resource_id_status FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id);
+GO
+
+ALTER TABLE rms.resource_activity_detail
+ADD CONSTRAINT fk_activity_id_detail FOREIGN KEY (activity_id) REFERENCES rms.resource_activity(id);
+GO
+
 
 ALTER TABLE rms.resource_program_description
 ADD CONSTRAINT fk_resource_id_description FOREIGN KEY (resource_detail_id) REFERENCES rms.resource_program_detail(id);

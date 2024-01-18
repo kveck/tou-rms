@@ -4,6 +4,12 @@ GO
 -- drop fk constraints
 ALTER TABLE [rms].[resource_program_steps] DROP CONSTRAINT [fk_resource_id_steps]
 GO
+ALTER TABLE [rms].[resource_program_status] DROP CONSTRAINT [fk_status_type_id]
+GO
+ALTER TABLE [rms].[resource_program_status] DROP CONSTRAINT [fk_resource_id_status]
+GO
+ALTER TABLE [rms].[resource_program_note] DROP CONSTRAINT [fk_resource_id_notes]
+GO
 ALTER TABLE [rms].[resource_program_detail] DROP CONSTRAINT [fk_resource_steps_id_detail]
 GO
 ALTER TABLE [rms].[resource_program_detail] DROP CONSTRAINT [fk_resource_process_time_id_detail]
@@ -21,6 +27,34 @@ GO
 ALTER TABLE [rms].[resource_program] DROP CONSTRAINT [fk_resource_organization_id]
 GO
 ALTER TABLE [rms].[resource_program] DROP CONSTRAINT [fk_resource_detial_id]
+GO
+ALTER TABLE [rms].[resource_language_xref] DROP CONSTRAINT [fk_resource_id_language]
+GO
+ALTER TABLE [rms].[resource_language_xref] DROP CONSTRAINT [fk_language_id]
+GO
+ALTER TABLE [rms].[resource_contact_xref] DROP CONSTRAINT [fk_resource_id_contact]
+GO
+ALTER TABLE [rms].[resource_contact_xref] DROP CONSTRAINT [fk_contact_id_resource]
+GO
+ALTER TABLE [rms].[resource_code_legacy] DROP CONSTRAINT [fk_resource_id_legacy]
+GO
+ALTER TABLE [rms].[resource_application_type_xref] DROP CONSTRAINT [fk_resource_program_id_application_type]
+GO
+ALTER TABLE [rms].[resource_application_type_xref] DROP CONSTRAINT [fk_application_type_id]
+GO
+ALTER TABLE [rms].[resource_activity_detail] DROP CONSTRAINT [fk_activity_id_detail]
+GO
+ALTER TABLE [rms].[resource_activity] DROP CONSTRAINT [fk_resource_id_activity]
+GO
+ALTER TABLE [rms].[resource_activity] DROP CONSTRAINT [fk_activity_type_id]
+GO
+ALTER TABLE [rms].[resource_activity] DROP CONSTRAINT [fk_activity_detail_id]
+GO
+ALTER TABLE [rms].[organization_address] DROP CONSTRAINT [fk_organization_id]
+GO
+ALTER TABLE [rms].[contact_language_xref] DROP CONSTRAINT [fk_language_id_contact]
+GO
+ALTER TABLE [rms].[contact_language_xref] DROP CONSTRAINT [fk_contact_id_language]
 GO
 
 DROP TABLE IF EXISTS rms.resource_contact_xref;
@@ -49,6 +83,12 @@ DROP TABLE IF EXISTS rms.resource_program_steps;
 DROP TABLE IF EXISTS rms.resource_process_time;
 GO
 
+DROP TABLE IF EXISTS rms.resource_activity_type;
+DROP TABLE IF EXISTS rms.resource_activity_detail;
+DROP TABLE IF EXISTS rms.resource_activity;
+DROP TABLE IF EXISTS rms.resource_program_status;
+DROP TABLE IF EXISTS rms.resource_status_type;
+DROP TABLE IF EXISTS rms.resource_code_legacy;
 DROP TABLE IF EXISTS rms.resource_program_detail;
 DROP TABLE IF EXISTS rms.resource_program;
 GO
