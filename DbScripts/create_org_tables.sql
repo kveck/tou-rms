@@ -2,7 +2,7 @@ USE touResourceDatabase
 GO
 
 CREATE TABLE rms.organization(
-id	int	IDENTITY(1,1),
+id int	IDENTITY(1,1),
 org_name nvarchar(512),
 website_url nvarchar(2083),
 email nvarchar(320),
@@ -146,8 +146,8 @@ GO
 
 -- table contains all resources (programs) offered by an organization
 CREATE TABLE rms.resource_program (
-id int IDENTITY(10000,1),
-resource_code INT NOT NULL,
+id int IDENTITY(1,1),
+resource_code INT IDENTITY(10000,1),
 org_id int NOT NULL,
 detail_id int NOT NULL, 
 name nvarchar(256),
@@ -274,7 +274,7 @@ ADD CONSTRAINT fk_internal_notes_id_detail  FOREIGN KEY (internal_notes_id) REFE
 GO
 
 CREATE TABLE rms.resource_contact(
-contact_id int IDENTITY(1,1),
+id int IDENTITY(1,1),
 title nvarchar(25),
 first_name nvarchar(128),
 middle_name nvarchar(128),
@@ -287,7 +287,7 @@ mobile char(10),
 fax char(10),
 email nvarchar(320), 
 
-CONSTRAINT pk_resource_contact PRIMARY KEY(contact_id),
+CONSTRAINT pk_resource_contact PRIMARY KEY(id),
 CONSTRAINT valid_contact_phone CHECK (phone like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 CONSTRAINT valid_contact_mobile CHECK (mobile like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 CONSTRAINT valid_contact_fax CHECK (fax like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
@@ -302,7 +302,7 @@ contact_id int NOT NULL,
 resource_id int NOT NULL,
 
 CONSTRAINT pk_resource_contact_xref PRIMARY KEY(id),
-CONSTRAINT fk_resource_id_contact FOREIGN KEY (contact_id) REFERENCES rms.resource_contact(contact_id),
+CONSTRAINT fk_resource_id_contact FOREIGN KEY (contact_id) REFERENCES rms.resource_contact(id),
 CONSTRAINT fk_contact_id_resource FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id),
 -- constraint so each resource cannot have duplicate contacts
 CONSTRAINT uq_resource_contact UNIQUE(contact_id, resource_id)
