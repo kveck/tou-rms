@@ -2,7 +2,7 @@ USE touResourceDatabase
 GO
 
 CREATE TABLE rms.organization(
-id int	IDENTITY(1,1),
+id int IDENTITY(1,1),
 org_name nvarchar(512),
 website_url nvarchar(2083),
 email nvarchar(320),
@@ -147,7 +147,7 @@ GO
 -- table contains all resources (programs) offered by an organization
 CREATE TABLE rms.resource_program (
 id int IDENTITY(1,1),
-resource_code INT IDENTITY(10000,1),
+resource_code AS 10000+id,
 org_id int NOT NULL,
 detail_id int NOT NULL, 
 name nvarchar(256),
@@ -343,7 +343,7 @@ contact_id int NOT NULL,
 
 CONSTRAINT pk_contact_language_xref PRIMARY KEY(id),
 CONSTRAINT fk_language_id_contact FOREIGN KEY (language_id) REFERENCES rms.resource_language(language_id),
-CONSTRAINT fk_contact_id_language FOREIGN KEY (contact_id) REFERENCES rms.resource_contact(contact_id),
+CONSTRAINT fk_contact_id_language FOREIGN KEY (contact_id) REFERENCES rms.resource_contact(id),
 -- constraint so each contact cannot have duplicate languages
 CONSTRAINT uq_contact_language UNIQUE(language_id, contact_id)
 );
