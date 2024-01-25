@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32;
 using MigrateTOUData.Data;
 using MigrateTOUData.Data.Database;
 using MigrateTOUData.Data.Models;
@@ -7,8 +10,26 @@ using System;
 using System.Resources;
 using System.Runtime.InteropServices;
 
-namespace MigrateTOUData 
+namespace MigrateTOUData
 {
+
+//1. Register your DbContext class in your "Program.cs" file.
+
+//    ```csharp
+//    builder.Services.AddDbContext<touResourceDatabaseContext>(
+//        options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//    ```
+
+//2. Add "ConnectionStrings" to your configuration file(secrets.json, appsettings.Development.json or appsettings.json).
+
+//    ```json
+//    {
+//        "ConnectionStrings": {
+//            "DefaultConnection": "Data Source=KRISXPS;Initial Catalog=touResourceDatabase;Integrated Security=True;Encrypt=False;Trust Server Certificate=True"
+//        }
+//    }
+//    ```
+
     internal class Program
     {
         static void Main(string[] args)
@@ -40,7 +61,7 @@ namespace MigrateTOUData
                             }
                         },
                         ResourcePrograms = new List<ResourceProgram>
-                        { 
+                        {
                             new ResourceProgram
                             {
                                 Name = "Boston Youth Flex Fund",
@@ -48,12 +69,26 @@ namespace MigrateTOUData
                                 Detail = new ResourceProgramDetail
                                 {
                                     Cost = "FREE",
-                                    Description = "Provides one-time payment to youth experiencing housing instability.",
+                                    Description = new ResourceProgramDescription
+                                    {
+                                        Description = "Provides one-time payment to youth experiencing housing instability.",
+                                    },
+                                    InternalNotes = new ResourceProgramNote
+                                    {
+                                        InternalNotes  = "Applications must be completed by a case manager (no self-referrals)."
+                                    },
+                                    ProcessSteps = new ResourceProgramStep
+                                    {
+                                        ProcessSteps = ""
+                                    },
+                                    ObtainabilityRating = 1,
+                                    CustomerServiceRating = 1,
+                                    ProcessTime = new ResourceProcessTime
+                                    {
 
-                                    Notes = "Applications must be completed by a case manager (no self-referrals).",
-
+                                    }
                                 },
-                                Status = new ToolsModels.ResourceProgramStatus
+                                Status = new ResourceProgramStatus
                                 {
 
                                 }
@@ -79,7 +114,7 @@ namespace MigrateTOUData
 
         }
 
-        static void mergeOrganization()
+        static void MergeOrganization()
         {          
             using (var dbContext = new RmsDbContext())
             {
@@ -88,19 +123,23 @@ namespace MigrateTOUData
                     orderby resource.ResourceCode
                     group resource by resource.ResourceUrl into dupResource
                     where dupResource.Count() > 1
-                    select new DuplicateResourcGroup(dupResource);
+                    select new DuplicateResourceGroup(dupResource);
 
                 foreach (var resourceGroup in groupByResourceUrlQuery)
                 {
-                    // if only one element in resource group, then nothing todo
+                    // skip if null
                     if (resourceGroup == null)
+                        continue;
+                    
+                    // skip the group if not flagged for organization merging
+                    if (resourceGroup.MergeOrganizations == false)
                         continue;
 
                     // user first element in list as the base for the merged organization
-                    var mergeOrg = resourceGroup.First().Org;
+                    var mergeOrg = resourceGroup.Group.First().Org;
 
                     // update remaining resource records in the group to use the mergeOrg id
-                    foreach (var resource in resourceGroup)
+                    foreach (var resource in resourceGroup.Group)
                     {
                         // use other records in the group to fill in any organization missing data
                         MergeOrganization(mergeOrg, resource.Org);
@@ -137,16 +176,13 @@ namespace MigrateTOUData
             if (mergeOrg.Phone.IsNullOrEmpty()) { }
 
             // check org address fields
-            if (mergeOrg.OrganizationAddresses)
-            {
-                
-            }
+            if (mergeOrg.OrganizationAddresses.First().State.IsNullOrEmpty()) { }
         }
     }
 
-    internal class DuplicateResourceGroup
+    internal class DuplicateResourceGroup(IGrouping<string, ResourceProgram> dupResource)
     {
-        private IGrouping<string, ResourceProgram> dupResource;
+        internal IGrouping<string, ResourceProgram> Group { get; private set; } = dupResource;
 
         internal bool MergeOrganizations {  get; set; } = false;
         internal bool MergeContacts { get; set; } = false;
@@ -154,9 +190,12 @@ namespace MigrateTOUData
 
         internal bool RequiresDataCleaning { get; set; } = false;
 
-        public DuplicateResourceGroup(IGrouping<string, ResourceProgram> dupResource)
+        private readonly List<int> contactIdsToKeep = [];
+        internal IEnumerable<int>  ContactIdsToKeep { get {  return contactIdsToKeep; } }
+
+        public void AddContactToKeep(int contactResourceCode)
         {
-            this.dupResource = dupResource;
+            contactIdsToKeep.Add(contactResourceCode);
         }
     }
 }

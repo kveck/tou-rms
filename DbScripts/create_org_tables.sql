@@ -146,7 +146,7 @@ GO
 -- table contains all resources (programs) offered by an organization
 CREATE TABLE rms.resource_program (
 id int IDENTITY(1,1),
-resource_code AS 10000+id NOT NULL,
+resource_code AS 10000+id PERSISTED NOT NULL,
 org_id int NOT NULL,
 detail_id int NOT NULL, 
 name nvarchar(256),
