@@ -9,13 +9,64 @@ using System.Threading.Tasks;
 
 namespace MigrateTOUData.Data.Database
 {
-    internal class VssDbContext : DbContext
+    internal class RmsDbContext : DbContext
     {
-        public DbSet<Organization> Organizations { get; set; }
-        public DbSet<OrganizationAddress> OrganizationAddresses { get; set; }
-        public DbSet<ResourceProgram> ResourcePrograms { get; set; }
-        public DbSet<ResourceContact> ResourceContacts { get; set; }
 
+        public virtual DbSet<Organization> Organizations { get; set; }
+
+        public virtual DbSet<OrganizationAddress> OrganizationAddresses { get; set; }
+
+        public virtual DbSet<RegionTaxonomy> RegionTaxonomies { get; set; }
+
+        public virtual DbSet<ContactWithRegion> ContactsWithRegions { get; set; }
+
+        public virtual DbSet<ContactWithLanguage> ContactsWithLanguages { get; set; }
+
+        public virtual DbSet<ResourceWithRegion> ResourcesWithRegions { get; set; }
+
+        public virtual DbSet<ResourceActivity> ResourceActivities { get; set; }
+
+        public virtual DbSet<ResourceActivityDetail> ResourceActivityDetails { get; set; }
+
+        public virtual DbSet<ResourceActivityType> ResourceActivityTypes { get; set; }
+
+        public virtual DbSet<ResourceApplicationType> ResourceApplicationTypes { get; set; }
+
+        public virtual DbSet<ResourceWithApplicationType> ResourcesWithApplicationTypes { get; set; }
+
+        public virtual DbSet<ResourceCodeLegacy> ResourceCodeLegacies { get; set; }
+
+        public virtual DbSet<ResourceContact> ResourceContacts { get; set; }
+
+        public virtual DbSet<ResourceWithContact> ResourcesWithContacts { get; set; }
+
+        public virtual DbSet<ResourceLanguage> ResourceLanguages { get; set; }
+
+        public virtual DbSet<ResourceWithLanguage> ResourcesWithLanguages { get; set; }
+
+        public virtual DbSet<ResourceProcessTime> ResourceProcessTimes { get; set; }
+
+        public virtual DbSet<ResourceProgram> ResourcePrograms { get; set; }
+
+        public virtual DbSet<ResourceProgramDescription> ResourceProgramDescriptions { get; set; }
+
+        public virtual DbSet<ResourceProgramDetail> ResourceProgramDetails { get; set; }
+
+        public virtual DbSet<ResourceProgramNote> ResourceProgramNotes { get; set; }
+
+        public virtual DbSet<ResourceProgramStatus> ResourceProgramStatuses { get; set; }
+
+        public virtual DbSet<ResourceProgramStep> ResourceProgramSteps { get; set; }
+
+        public virtual DbSet<ResourceStatusType> ResourceStatusTypes { get; set; }
+
+        public virtual DbSet<ServiceTaxonomy> ServiceTaxonomies { get; set; }
+
+        public virtual DbSet<ResourceWithService> ResourcesWithServices { get; set; }
+
+        public virtual DbSet<SituationTaxonomy> SituationTaxonomies { get; set; }
+
+        public virtual DbSet<ResourceWithSituation> ResourcesWithSituations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlServer(@"Server=.;Database=touResourceDatabase;Trusted_Connection=true;TrustServerCertificate=true;");
@@ -38,7 +89,12 @@ namespace MigrateTOUData.Data.Database
             builder.ApplyConfiguration(new ResourceWithApplicationTypeConfiguration());
             builder.ApplyConfiguration(new ResourceWithServiceConfiguration());
             builder.ApplyConfiguration(new ResourceWithRegionConfiguration());
-            builder.ApplyConfiguration(new ResourceWithSituationConfiguration());            
+            builder.ApplyConfiguration(new ResourceWithSituationConfiguration());
+            builder.ApplyConfiguration(new ResourceStatusConfiguration());
+            builder.ApplyConfiguration(new ResourceStatusTypeConfiguration());
+            builder.ApplyConfiguration(new ResourceActivityConfiguration());
+            builder.ApplyConfiguration(new ResourceActivityDetailConfiguration());
+            builder.ApplyConfiguration(new ResourceActivityTypeConfiguration());
 
             // resource contact tables
             builder.ApplyConfiguration(new ResourceContactConfiguration());

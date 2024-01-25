@@ -13,12 +13,24 @@ public partial class ResourceProgramDetail
 
     public int? ProcessTimeId { get; set; }
 
+    public int? DescriptionId { get; set; }
+
+    public int? ProcessStepsId { get; set; }
+
+    public int? InternalNotesId { get; set; }
+
     public string Cost { get; set; }
 
     public byte? CustomerServiceRating { get; set; }
 
     public byte? ObtainabilityRating { get; set; }
 
+    public virtual ResourceProgramDescription Description { get; set; }
+
+    public virtual ResourceProgramNote InternalNotes { get; set; }
+    
+    public virtual ResourceProgramStep ProcessSteps { get; set; }
+    
     public virtual ResourceProcessTime ProcessTime { get; set; }
 
     public virtual ResourceProgram Resource { get; set; }

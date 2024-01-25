@@ -137,7 +137,6 @@ obtainability_rating tinyint,
 
 CONSTRAINT pk_resource_program_detail PRIMARY KEY(id),
 CONSTRAINT uq_resource_id_detail UNIQUE(resource_id),
-CONSTRAINT uq_process_time_id_detail UNIQUE(process_time_id),
 CONSTRAINT uq_resource_description_id_detail UNIQUE(description_id),
 CONSTRAINT uq_resource_steps_id_detail UNIQUE(process_steps_id),
 CONSTRAINT uq_resource_notes_id_detail UNIQUE(internal_notes_id),
@@ -147,19 +146,17 @@ GO
 -- table contains all resources (programs) offered by an organization
 CREATE TABLE rms.resource_program (
 id int IDENTITY(1,1),
-resource_code AS 10000+id,
+resource_code AS 10000+id NOT NULL,
 org_id int NOT NULL,
 detail_id int NOT NULL, 
 name nvarchar(256),
 resource_url nvarchar(3000),
 status_id int NOT NULL,
-timestamp_last_update datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 timestamp_created datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 
 CONSTRAINT pk_resource_program PRIMARY KEY(id),
 CONSTRAINT fk_resource_organization_id FOREIGN KEY (org_id) REFERENCES rms.organization(id),
-CONSTRAINT uq_org_id UNIQUE(org_id),
-CONSTRAINT fk_resource_detial_id FOREIGN KEY (detail_id) REFERENCES rms.resource_program_detail(id),
+CONSTRAINT fk_resource_detail_id FOREIGN KEY (detail_id) REFERENCES rms.resource_program_detail(id),
 CONSTRAINT uq_detail_id UNIQUE(detail_id),
 CONSTRAINT fk_resource_status_id FOREIGN KEY (status_id) REFERENCES rms.resource_program_status(id),
 CONSTRAINT uq_status_id_resource UNIQUE(status_id),
@@ -213,9 +210,9 @@ CREATE TABLE rms.resource_activity_detail(
 id int IDENTITY(1,1),
 activity_id int NOT NULL,
 activity_detail nvarchar(max) NOT NULL,
-[timestamp] datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 
 CONSTRAINT pk_resource_resource_activity_detail PRIMARY KEY(id),
+CONSTRAINT uq_detail_activity_id UNIQUE(activity_id),
 );
 GO
 

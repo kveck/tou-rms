@@ -18,12 +18,14 @@ namespace MigrateTOUData.Data.Configuration
 
             builder.ToTable("resource_program_description", "rms");
 
+            builder.HasIndex(e => e.ResourceDetailId, "uq_resource_id_description").IsUnique();
+
             builder.Property(e => e.Id).HasColumnName("id");
             builder.Property(e => e.Description).HasColumnName("description");
-            builder.Property(e => e.ResourceId).HasColumnName("resource_id");
+            builder.Property(e => e.ResourceDetailId).HasColumnName("resource_detail_id");
 
-            builder.HasOne(d => d.Resource).WithMany(p => p.Descriptions)
-                .HasForeignKey(d => d.ResourceId)
+            builder.HasOne(d => d.ResourceDetail).WithOne(p => p.Description)
+                .HasForeignKey<ResourceProgramDescription>(d => d.ResourceDetailId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_resource_id_description");
         }

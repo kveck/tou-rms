@@ -9,9 +9,9 @@ public partial class ResourceProgramDescription
 {
     public int Id { get; set; }
 
-    public int ResourceId { get; set; }
+    public int ResourceDetailId { get; set; }
 
     public string Description { get; set; }
 
-    public virtual ResourceProgram Resource { get; set; }
+    public virtual ResourceProgramDetail ResourceDetail { get; set; }
 }

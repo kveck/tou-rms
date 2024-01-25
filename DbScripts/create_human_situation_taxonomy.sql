@@ -6,11 +6,11 @@
 USE touResourceDatabase
 GO
 
-DROP TABLE IF EXISTS situation_taxonomy_resource_xref;
-DROP TABLE IF EXISTS situation_taxonomy;
+DROP TABLE IF EXISTS rms.situation_taxonomy_resource_xref;
+DROP TABLE IF EXISTS rms.situation_taxonomy;
 GO
 
-CREATE TABLE situation_taxonomy(
+CREATE TABLE rms.situation_taxonomy(
 taxonomy_id int IDENTITY(1,1),
 situation nvarchar(126) NOT NULL,
 taxonomy_left int NOT NULL,
@@ -23,20 +23,20 @@ CONSTRAINT uq_situation_taxonomy_right UNIQUE(taxonomy_right),
 GO
 
 -- Junction (cross-ref) table for human situation taxonomy and resource
-CREATE TABLE situation_taxonomy_resource_xref(
+CREATE TABLE rms.situation_taxonomy_resource_xref(
 id int IDENTITY(1,1),
 situation_taxonomy_id int NOT NULL, 
 resource_id int NOT NULL,
 
 CONSTRAINT pk_situationtaxon_resource_xref PRIMARY KEY(id),
-CONSTRAINT fk_situation_taxon_id FOREIGN KEY (situation_taxonomy_id) REFERENCES situation_taxonomy(taxonomy_id),
-CONSTRAINT fk_vss_resource_id_situation_taxonomy FOREIGN KEY (resource_id) REFERENCES resource_program(id)
+CONSTRAINT fk_situation_taxon_id FOREIGN KEY (situation_taxonomy_id) REFERENCES rms.situation_taxonomy(taxonomy_id),
+CONSTRAINT fk_vss_resource_id_situation_taxonomy FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id)
 );
 GO
 
 SET QUOTED_IDENTIFIER OFF;
 
-INSERT INTO situation_taxonomy(situation, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.situation_taxonomy(situation, taxonomy_left, taxonomy_right) 
 	VALUES 
 ("Human Situations",0,375),
 ("General",1,4),

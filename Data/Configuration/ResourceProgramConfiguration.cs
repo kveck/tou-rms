@@ -17,43 +17,46 @@ namespace MigrateTOUData.Data.Configuration
 
             builder.ToTable("resource_program", "rms");
 
+            builder.HasIndex(e => e.DetailId, "uq_detail_id").IsUnique();
+
+            builder.HasIndex(e => e.OrgId, "uq_org_id").IsUnique();
+
+            builder.HasIndex(e => e.ResourceCode, "uq_resource_code").IsUnique();
+
+            builder.HasIndex(e => e.StatusId, "uq_status_id_resource").IsUnique();
+
             builder.Property(e => e.Id).HasColumnName("id");
+            builder.Property(e => e.DetailId).HasColumnName("detail_id");
             builder.Property(e => e.Name)
                 .HasMaxLength(256)
-                .IsUnicode(false)
                 .HasColumnName("name");
-            builder.Property(e => e.OrgId)
-                .HasColumnName("org_id")
-                .IsRequired();
+            builder.Property(e => e.OrgId).HasColumnName("org_id");
             builder.Property(e => e.ResourceCode)
-                .IsRequired()
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasComputedColumnSql("((10000)+[id])", false)
                 .HasColumnName("resource_code");
             builder.Property(e => e.ResourceUrl)
-                .HasMaxLength(2083)
-                .IsUnicode(false)
+                .HasMaxLength(3000)
                 .HasColumnName("resource_url");
-            builder.Property(e => e.Status)
-                .IsRequired()
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .HasColumnName("status");
+            builder.Property(e => e.StatusId).HasColumnName("status_id");
             builder.Property(e => e.TimestampCreated)
                 .HasPrecision(3)
                 .HasDefaultValueSql("(getutcdate())")
-                .IsRequired()
                 .HasColumnName("timestamp_created");
-            builder.Property(e => e.TimestampLastUpdate)
-                .HasPrecision(3)
-                .IsRequired()
-                .HasDefaultValueSql("(getutcdate())")
-                .HasColumnName("timestamp_last_update");
+
+            builder.HasOne(d => d.Detail).WithOne(p => p.Resource)
+                .HasForeignKey<ResourceProgram>(d => d.DetailId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_resource_detail_id");
 
             builder.HasOne(d => d.Org).WithMany(p => p.ResourcePrograms)
                 .HasForeignKey(d => d.OrgId)
                 .HasConstraintName("fk_resource_organization_id");
+
+            // resource program stores a single status, as the latest status
+            builder.HasOne(d => d.Status).WithOne(p => p.Resource)
+                .HasForeignKey<ResourceProgram>(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_resource_status_id");
         }
     }
 }

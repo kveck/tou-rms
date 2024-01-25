@@ -22,6 +22,7 @@ namespace MigrateTOUData.Data.Configuration
 
             builder.Property(e => e.Id).HasColumnName("id");
             builder.Property(e => e.TimeCategory)
+                .IsRequired()
                 .HasMaxLength(50)
                 .HasColumnName("time_category");
         }

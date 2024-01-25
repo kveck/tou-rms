@@ -9,9 +9,10 @@ public partial class ResourceProgramStep
 {
     public int Id { get; set; }
 
-    public int ResourceId { get; set; }
+    public int ResourceDetailId { get; set; }
 
     public string ProcessSteps { get; set; }
 
-    public virtual ResourceProgram Resource { get; set; }
+    public virtual ResourceProgramDetail ResourceDetail { get; set; }
+
 }

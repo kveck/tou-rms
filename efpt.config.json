@@ -40,11 +40,27 @@
          "ObjectType": 0
       },
       {
+         "Name": "[rms].[resource_activity]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[rms].[resource_activity_detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[rms].[resource_activity_type]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[rms].[resource_application_type]",
          "ObjectType": 0
       },
       {
          "Name": "[rms].[resource_application_type_xref]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[rms].[resource_code_legacy]",
          "ObjectType": 0
       },
       {
@@ -76,15 +92,23 @@
          "ObjectType": 0
       },
       {
-         "Name": "[rms].[resource_program_details]",
+         "Name": "[rms].[resource_program_detail]",
          "ObjectType": 0
       },
       {
-         "Name": "[rms].[resource_program_notes]",
+         "Name": "[rms].[resource_program_note]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[rms].[resource_program_status]",
          "ObjectType": 0
       },
       {
          "Name": "[rms].[resource_program_steps]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[rms].[resource_status_type]",
          "ObjectType": 0
       },
       {

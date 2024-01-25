@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MigrateTOUData.Data;
 using MigrateTOUData.Data.Database;
 using MigrateTOUData.Data.Models;
 using System;
+using System.Resources;
+using System.Runtime.InteropServices;
 
 namespace MigrateTOUData 
 {
@@ -13,7 +16,7 @@ namespace MigrateTOUData
             Console.WriteLine("Start");
             try
             {
-                using (var dbContext = new VssDbContext())
+                using (var dbContext = new RmsDbContext())
                 {
                     var newOrg = dbContext.Add(new Organization
                     {
@@ -40,13 +43,20 @@ namespace MigrateTOUData
                         { 
                             new ResourceProgram
                             {
-                                ResourceId = "HOMES1",
                                 Name = "Boston Youth Flex Fund",
                                 ResourceUrl = @"https://drive.google.com/file/d/1qYOKVRt0AgFz667V4_2HC-eDhTGAjC_k/view",
-                                Description = "Provides one-time payment to youth experiencing housing instability.",
-                                Cost = "FREE",
-                                Notes = "Applications must be completed by a case manager (no self-referrals).",
-                                Status = "VERIFIED"
+                                Detail = new ResourceProgramDetail
+                                {
+                                    Cost = "FREE",
+                                    Description = "Provides one-time payment to youth experiencing housing instability.",
+
+                                    Notes = "Applications must be completed by a case manager (no self-referrals).",
+
+                                },
+                                Status = new ToolsModels.ResourceProgramStatus
+                                {
+
+                                }
                             }
                         }
                     });
@@ -67,6 +77,86 @@ namespace MigrateTOUData
                 Console.WriteLine(ex.ToString());   
             }
 
+        }
+
+        static void mergeOrganization()
+        {          
+            using (var dbContext = new RmsDbContext())
+            {
+                var groupByResourceUrlQuery =
+                    from resource in dbContext.ResourcePrograms
+                    orderby resource.ResourceCode
+                    group resource by resource.ResourceUrl into dupResource
+                    where dupResource.Count() > 1
+                    select new DuplicateResourcGroup(dupResource);
+
+                foreach (var resourceGroup in groupByResourceUrlQuery)
+                {
+                    // if only one element in resource group, then nothing todo
+                    if (resourceGroup == null)
+                        continue;
+
+                    // user first element in list as the base for the merged organization
+                    var mergeOrg = resourceGroup.First().Org;
+
+                    // update remaining resource records in the group to use the mergeOrg id
+                    foreach (var resource in resourceGroup)
+                    {
+                        // use other records in the group to fill in any organization missing data
+                        MergeOrganization(mergeOrg, resource.Org);
+
+                        // no need to update the resource associated with the mergeOrg record
+                        if (resource.OrgId == mergeOrg.Id)
+                            continue;
+
+                        var deleteOrg = resource.Org;
+
+                        // update resource with the mergeOrg
+                        resource.OrgId = mergeOrg.Id;
+                        resource.Org = mergeOrg;
+
+                        // delete the duplicate organization and related org address
+                        RmsRepository.DeleteOrganization(deleteOrg);
+                    }
+                }
+            }
+        }
+
+        static void MergeOrganization(Organization mergeOrg, Organization groupOrg)
+        {
+            if (mergeOrg.Id == groupOrg.Id)
+                return;
+
+            // fill in empty fields
+            if (mergeOrg.Email.IsNullOrEmpty()) { }
+            
+            if (mergeOrg.Fax.IsNullOrEmpty()) { }
+
+            if (mergeOrg.Url.IsNullOrEmpty()) { }
+
+            if (mergeOrg.Phone.IsNullOrEmpty()) { }
+
+            // check org address fields
+            if (mergeOrg.OrganizationAddresses)
+            {
+                
+            }
+        }
+    }
+
+    internal class DuplicateResourceGroup
+    {
+        private IGrouping<string, ResourceProgram> dupResource;
+
+        internal bool MergeOrganizations {  get; set; } = false;
+        internal bool MergeContacts { get; set; } = false;
+        internal bool MergeResourcePrograms{ get; set; } = false;
+
+        internal bool RequiresDataCleaning { get; set; } = false;
+
+        public DuplicateResourceGroup(IGrouping<string, ResourceProgram> dupResource)
+        {
+            this.dupResource = dupResource;
         }
     }
 }

@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 namespace MigrateTOUData.Data.Models;
 
-public partial class ResourceProcessTime
+public partial class ResourceCodeLegacy
 {
     public int Id { get; set; }
 
-    public string TimeCategory { get; set; }
+    public int ResourceId { get; set; }
 
-    public virtual ICollection<ResourceProgramDetail> ResourceDetails { get; set; } = new List<ResourceProgramDetail>();
+    public int LegacyCode { get; set; }
+
+    public virtual ResourceProgram Resource { get; set; }
 }

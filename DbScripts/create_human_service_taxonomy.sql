@@ -5,11 +5,11 @@
 USE touResourceDatabase
 GO
 
-DROP TABLE IF EXISTS service_taxononomy_resource_xref;
-DROP TABLE IF EXISTS service_taxonomy;
+DROP TABLE IF EXISTS rms.service_taxononomy_resource_xref;
+DROP TABLE IF EXISTS rms.service_taxonomy;
 GO
 
-CREATE TABLE service_taxonomy(
+CREATE TABLE rms.service_taxonomy(
 taxonomy_id int IDENTITY(1,1),
 service nvarchar(126) NOT NULL,
 taxonomy_left int NOT NULL,
@@ -23,20 +23,20 @@ CONSTRAINT uq_service_taxonomy_right UNIQUE(taxonomy_right),
 GO
 
 -- Junction (cross-ref) table for human situation taxonomy and resource
-CREATE TABLE service_taxonomy_resource_xref(
+CREATE TABLE rms.service_taxonomy_resource_xref(
 id int IDENTITY(1,1),
 service_taxonomy_id int NOT NULL, 
 resource_id int NOT NULL,
 
 CONSTRAINT pk_servicetaxon_resource_xref PRIMARY KEY(id),
-CONSTRAINT fk_service_taxon_id FOREIGN KEY (service_taxonomy_id) REFERENCES service_taxonomy(taxonomy_id),
-CONSTRAINT fk_vss_resource_id_service_taxonomy FOREIGN KEY (resource_id) REFERENCES resource_program(id)
+CONSTRAINT fk_service_taxon_id FOREIGN KEY (service_taxonomy_id) REFERENCES rms.service_taxonomy(taxonomy_id),
+CONSTRAINT fk_vss_resource_id_service_taxonomy FOREIGN KEY (resource_id) REFERENCES rms.resource_program(id)
 );
 GO
 
 SET QUOTED_IDENTIFIER OFF;
 
-INSERT INTO service_taxonomy(service, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.service_taxonomy(service, taxonomy_left, taxonomy_right) 
 	VALUES 
 ("Services",0,693),
 ("Food",1,18),

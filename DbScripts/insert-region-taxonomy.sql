@@ -5,12 +5,12 @@
 USE touResourceDatabase
 GO
 
-DELETE FROM region_taxonomy
+DELETE FROM rms.region_taxonomy
 GO
 
 SET QUOTED_IDENTIFIER OFF;
 
-INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.region_taxonomy(region, taxonomy_left, taxonomy_right) 
 	VALUES
 ("Nationwide",0,13687),
 ("California",1,7776),
@@ -1012,7 +1012,7 @@ INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right)
 ("90716",1990,1991);
 GO
 
-INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.region_taxonomy(region, taxonomy_left, taxonomy_right) 
 	VALUES
 ("Hawthorne",1993,1998),
 ("90250",1994,1995),
@@ -2007,7 +2007,7 @@ INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right)
 ("92693",3972,3973);
 GO
 
-INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.region_taxonomy(region, taxonomy_left, taxonomy_right) 
 	VALUES
 ("Santa Ana",3975,3998),
 ("92701",3976,3977),
@@ -3008,7 +3008,7 @@ INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right)
 ("93402",5966,5967);
 GO
 
-INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.region_taxonomy(region, taxonomy_left, taxonomy_right) 
 	VALUES
 ("Morro Bay",5969,5974),
 ("93442",5970,5971),
@@ -3993,7 +3993,7 @@ INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right)
 ("31052",7928,7929);
 GO
 
-INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.region_taxonomy(region, taxonomy_left, taxonomy_right) 
 	VALUES
 ("Macon",7931,7972),
 ("31201",7932,7933),
@@ -4994,7 +4994,7 @@ INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right)
 ("31019",9922,9923);
 GO
 
-INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.region_taxonomy(region, taxonomy_left, taxonomy_right) 
 	VALUES
 ("Dublin",9925,9930),
 ("31021",9926,9927),
@@ -5994,7 +5994,7 @@ INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right)
 ("01940",11914,11915);
 GO
 
-INSERT INTO region_taxonomy(region, taxonomy_left, taxonomy_right) 
+INSERT INTO rms.region_taxonomy(region, taxonomy_left, taxonomy_right) 
 	VALUES
 ("Manchester",11917,11920),
 ("01944",11918,11919),
