@@ -10,12 +10,12 @@ namespace MigrateTOUData.Data.Database
 {
     internal class RmsRepository()
     {
-        internal static async Task DeleteOrganization (Organization org)
+        internal static void DeleteOrganization (Organization org)
         {
             using (var dbContext = new RmsDbContext())
             {
                 dbContext.Organizations.Remove(org);
-                await dbContext.SaveChangesAsync();
+                dbContext.SaveChanges();
             }
         }
 

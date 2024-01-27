@@ -15,6 +15,8 @@ public partial class OrganizationAddress
 
     public string Street2 { get; set; }
 
+    public string City { get; set; }
+
     public string State { get; set; }
 
     public string Zip { get; set; }

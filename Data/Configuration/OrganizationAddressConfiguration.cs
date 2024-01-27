@@ -30,13 +30,17 @@ namespace MigrateTOUData.Data.Configuration
                     .IsFixedLength()
                     .HasColumnName("state_code");
                 builder.Property(e => e.Street1)
-                    .HasMaxLength(256)
+                    .HasMaxLength(512)
                     .IsUnicode(false)
                     .HasColumnName("street1");
                 builder.Property(e => e.Street2)
-                    .HasMaxLength(256)
+                    .HasMaxLength(512)
                     .IsUnicode(false)
                     .HasColumnName("street2");
+                builder.Property(e => e.City)
+                    .HasMaxLength(512)
+                    .IsUnicode(false)
+                    .HasColumnName("city");
                 builder.Property(e => e.Zip)
                     .HasMaxLength(5)
                     .IsUnicode(false)

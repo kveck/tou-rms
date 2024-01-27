@@ -65,6 +65,18 @@ namespace MigrateTOUData.BusinessLogic
                 resource.OrgId = mergedOrg.Id;
                 resource.Org = mergedOrg;
 
+                // update associated resource contacts with mergeOrg
+                foreach(var contact in resource.Org.ResourceContacts)
+                {
+                    if (contact == null) continue;
+
+                    // set the contacts organization to the 'merged organization'                    
+                    contact.OrgId = mergedOrg.Id;
+
+                    // add the contact to the contact collection for 'merged organization' 
+                    mergedOrg.ResourceContacts.Add(contact);
+                }
+
                 // delete the duplicate organization and related org address
                 RmsRepository.DeleteOrganization(deleteOrg);
             }
@@ -106,11 +118,11 @@ namespace MigrateTOUData.BusinessLogic
                 // use other records in the group to fill in any organization missing data
                 MergeResourceFields(mergedResource, resource);
 
-                // update merged resource legacy codes
+                // add resource legacy codes to merged resource legacy codes
+                UpdateLegacyCodes(mergedResource, resource);
 
-                // update contact cross ref table
-
-                // delete legacy code record for duplicate resource
+                // add resource contact to merged resource contacts
+                UpdateResourceWithContacts(mergedResource, resource);
 
                 // delete the duplicate resource and related resource tables (detail, notes, status, etc)
                 RmsRepository.DeleteResource(resource);
@@ -124,5 +136,26 @@ namespace MigrateTOUData.BusinessLogic
 
 
         }
+
+        private void UpdateLegacyCodes(ResourceProgram mergeResource, ResourceProgram sourceResource)
+        {
+            foreach (var legacyCode in sourceResource.ResourceCodeLegacies)
+            {
+                legacyCode.ResourceId = mergeResource.Id;
+                mergeResource.ResourceCodeLegacies.Add(legacyCode);
+                legacyCode.Resource = mergeResource;
+            }
+        }
+
+        private void UpdateResourceWithContacts(ResourceProgram mergeResource, ResourceProgram sourceResource)
+        {
+            foreach (var srcContact in sourceResource.ResourceWithContacts)
+            {
+                srcContact.ResourceId = mergeResource.Id;
+                mergeResource.ResourceWithContacts.Add(srcContact);
+                srcContact.Resource = mergeResource;
+            }
+        }
+
     }
 }
