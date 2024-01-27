@@ -16,7 +16,7 @@ namespace MigrateTOUData.Data.Configuration
         {
                 builder.HasKey(e => e.Id).HasName("pk_org_address_id");
 
-                builder.ToTable("organization_address", "rms"););
+                builder.ToTable("organization_address", "rms");
 
                 builder.Property(e => e.Id).HasColumnName("id");
                 builder.Property(e => e.Country)

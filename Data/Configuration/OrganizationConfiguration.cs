@@ -25,13 +25,7 @@ namespace MigrateTOUData.Data.Configuration
                 .IsRequired(true)
                 .IsUnicode(false)
                 .HasMaxLength(256);
-            builder.Property(org => org.OrgCode)
-                .HasColumnName("org_code")
-                .IsRequired(true)
-                .IsUnicode(false)
-                .HasMaxLength(6)
-                .IsFixedLength();
-            builder.Property(org => org.Url)
+            builder.Property(org => org.WebsiteUrl)
                 .HasColumnName("website_url")
                 .IsRequired(false)
                 .IsUnicode(false)
@@ -53,9 +47,6 @@ namespace MigrateTOUData.Data.Configuration
                 .IsUnicode(false)
                 .HasMaxLength(10)
                 .IsFixedLength();
-            builder.Property(org => org.NextResourceId)
-                .HasColumnName("next_resource_id")
-                .HasDefaultValue(1);
         }
     }
 }

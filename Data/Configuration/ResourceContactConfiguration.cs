@@ -18,6 +18,7 @@ namespace MigrateTOUData.Data.Configuration
             builder.ToTable("resource_contact", "rms");
 
             builder.Property(e => e.Id).HasColumnName("contact_id");
+            builder.Property(e => e.OrgId).HasColumnName("org_id");
             builder.Property(e => e.Email)
                 .HasMaxLength(320)
                 .IsUnicode(false)
@@ -65,6 +66,12 @@ namespace MigrateTOUData.Data.Configuration
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("title");
+
+
+            builder.HasOne(d => d.Org).WithMany(p => p.ResourceContacts)
+                .HasForeignKey(d => d.OrgId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_org_resource_contact");
         }
     }
 }

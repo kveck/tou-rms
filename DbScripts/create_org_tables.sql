@@ -272,6 +272,7 @@ GO
 
 CREATE TABLE rms.resource_contact(
 id int IDENTITY(1,1),
+org_id int NOT NULL, 
 title nvarchar(25),
 first_name nvarchar(128),
 middle_name nvarchar(128),
@@ -285,9 +286,10 @@ fax char(10),
 email nvarchar(320), 
 
 CONSTRAINT pk_resource_contact PRIMARY KEY(id),
+CONSTRAINT fk_org_resource_contact FOREIGN KEY (org_id) REFERENCES rms.organziation(id),
 CONSTRAINT valid_contact_phone CHECK (phone like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 CONSTRAINT valid_contact_mobile CHECK (mobile like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
-CONSTRAINT valid_contact_fax CHECK (fax like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+CONSTRAINT valid_contact_fax CHECK (fax like '[2-9][0-9][0-9][1-9][0-9][0-9][0-9][0-9][0-9][0-9]')
 );
 GO
 

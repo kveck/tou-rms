@@ -10,12 +10,8 @@ public partial class Organization
     public int Id { get; set; }
 
     public string Name { get; set; }
-
-    public string OrgCode { get; set; }
-
-    public int? NextResourceId { get; set; }
-
-    public string Url { get; set; }
+   
+    public string WebsiteUrl { get; set; }
 
     public string Email { get; set; }
 
@@ -26,4 +22,6 @@ public partial class Organization
     public virtual ICollection<OrganizationAddress> OrganizationAddresses { get; set; } = new List<OrganizationAddress>();
 
     public virtual ICollection<ResourceProgram> ResourcePrograms { get; set; } = new List<ResourceProgram>();
+
+    public virtual ICollection<ResourceContact> ResourceContacts { get; set; } = new List<ResourceContact>();
 }

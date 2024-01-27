@@ -6,6 +6,8 @@ public partial class ResourceContact
 {
     public int Id { get; set; }
 
+    public int OrgId { get; set; }
+
     public string Title { get; set; }
 
     public string FirstName { get; set; }
@@ -27,6 +29,8 @@ public partial class ResourceContact
     public string Fax { get; set; }
 
     public string Email { get; set; }
+
+    public virtual Organization Org { get; set; }
 
     public virtual ICollection<ContactWithLanguage> ContactWithLanguages { get; set; } = new List<ContactWithLanguage>();
 

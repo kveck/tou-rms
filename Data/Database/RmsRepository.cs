@@ -18,5 +18,10 @@ namespace MigrateTOUData.Data.Database
                 await dbContext.SaveChangesAsync();
             }
         }
+
+        internal static void DeleteResource(ResourceProgram resource)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
