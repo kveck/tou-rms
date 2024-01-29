@@ -14,18 +14,15 @@ namespace MigrateTOUData.Services.Merge
 {
     internal class MergeService : IMergeService
     {
+        // constructor should use DI to pass in repository class to do all db work
         void IMergeService.Merge()
         {
-            // Merge should 
             var groupByResourceUrlQuery =
                 from resource in dbContext.ResourcePrograms
                 orderby resource.ResourceCode
                 group resource by resource.ResourceUrl into dupResource
                 where dupResource.Count() > 1
                 select new DuplicateResourceGroup(dupResource);
-
-            // first iterate to identify which groups can be merged
-
 
             foreach (var resourceGroup in groupByResourceUrlQuery)
             {
@@ -197,6 +194,11 @@ namespace MigrateTOUData.Services.Merge
                     RmsRepository.DeleteContact(contact);
                 }
             }
+        }
+
+        private void MergeContactFields(ResourceContact mergedContact, ResourceContact contact)
+        {
+            throw new NotImplementedException();
         }
     }
 }
