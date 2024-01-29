@@ -16,12 +16,12 @@ namespace MigrateTOUData.Services.Data
         public bool MergeResourcePrograms { get; set; } = false;
         public bool RequiresDataCleaning { get; set; } = false;
 
-        private readonly List<int> contactIdsToKeep = [];
-        public ICollection<int> ContactIdsToKeep { get { return contactIdsToKeep; } }
+        private readonly List<ResourceContact> contactIdsToKeep = [];
+        public ICollection<ResourceContact> ContactsToKeep { get { return contactIdsToKeep; } }
 
-        public void AddContactToKeep(int contactResourceCode)
+        public void AddContactToKeep(ResourceContact contact)
         {
-            contactIdsToKeep.Add(contactResourceCode);
+            contactIdsToKeep.Add(contact);
         }
     }
 }

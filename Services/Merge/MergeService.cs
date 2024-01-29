@@ -1,4 +1,6 @@
-﻿using MigrateTOUData.Data.Database;
+﻿using Azure.Core;
+using Microsoft.EntityFrameworkCore;
+using MigrateTOUData.Data.Database;
 using MigrateTOUData.Data.Models;
 using MigrateTOUData.Services.Contracts;
 using MigrateTOUData.Services.Data;
@@ -8,36 +10,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MigrateTOUData.BusinessLogic
+namespace MigrateTOUData.Services.Merge
 {
     internal class MergeService : IMergeService
     {
         void IMergeService.Merge()
         {
-            using (var dbContext = new RmsDbContext())
+            // Merge should 
+            var groupByResourceUrlQuery =
+                from resource in dbContext.ResourcePrograms
+                orderby resource.ResourceCode
+                group resource by resource.ResourceUrl into dupResource
+                where dupResource.Count() > 1
+                select new DuplicateResourceGroup(dupResource);
+
+            // first iterate to identify which groups can be merged
+
+
+            foreach (var resourceGroup in groupByResourceUrlQuery)
             {
-                var groupByResourceUrlQuery =
-                    from resource in dbContext.ResourcePrograms
-                    orderby resource.ResourceCode
-                    group resource by resource.ResourceUrl into dupResource
-                    where dupResource.Count() > 1
-                    select new DuplicateResourceGroup(dupResource);
+                // skip if null
+                if (resourceGroup == null)
+                    continue;
 
-                foreach (var resourceGroup in groupByResourceUrlQuery)
-                {
-                    // skip if null
-                    if (resourceGroup == null)
-                        continue;
+                // merge the organizations for the resource group, if needed
+                if (resourceGroup.MergeOrganizations)
+                    MergeOrganization(resourceGroup);
 
-                    // merge the organizations for the resource group, if needed
-                    if (resourceGroup.MergeOrganizations)
-                        MergeOrganization(resourceGroup);
+                if (resourceGroup.MergeResourcePrograms)
+                    MergeResources(resourceGroup);
 
-                    if (resourceGroup.MergeResourcePrograms)
-                        MergeResources(resourceGroup);
-                }
-
+                if (resourceGroup.MergeContacts)
+                    MergeContacts(resourceGroup);
             }
+
         }
 
         private void MergeOrganization(DuplicateResourceGroup resourceGroup)
@@ -66,7 +72,7 @@ namespace MigrateTOUData.BusinessLogic
                 resource.Org = mergedOrg;
 
                 // update associated resource contacts with mergeOrg
-                foreach(var contact in resource.Org.ResourceContacts)
+                foreach (var contact in resource.Org.ResourceContacts)
                 {
                     if (contact == null) continue;
 
@@ -87,16 +93,16 @@ namespace MigrateTOUData.BusinessLogic
                 return;
 
             // fill in empty fields
-            if (String.IsNullOrEmpty(mergeOrg.Email)) { }
+            if (string.IsNullOrEmpty(mergeOrg.Email)) { }
 
-            if (String.IsNullOrEmpty(mergeOrg.Fax)) { }
+            if (string.IsNullOrEmpty(mergeOrg.Fax)) { }
 
-            if (String.IsNullOrEmpty(mergeOrg.WebsiteUrl)) { }
+            if (string.IsNullOrEmpty(mergeOrg.WebsiteUrl)) { }
 
-            if (String.IsNullOrEmpty(mergeOrg.Phone)) { }
+            if (string.IsNullOrEmpty(mergeOrg.Phone)) { }
 
             // check org address fields
-            if (String.IsNullOrEmpty(mergeOrg.OrganizationAddresses.First().State)) { }
+            if (string.IsNullOrEmpty(mergeOrg.OrganizationAddresses.First().State)) { }
         }
 
 
@@ -157,5 +163,40 @@ namespace MigrateTOUData.BusinessLogic
             }
         }
 
+        private void MergeContacts(DuplicateResourceGroup resourceGroup)
+        {
+            // skip if no contacts to merge and no contacts to kep
+            if (resourceGroup.MergeContacts == false && resourceGroup.ContactsToKeep.Count == 0)
+                return;
+
+            // organization owns all the contacts, resource references the contact
+            // skip if organization was not merged
+            if (resourceGroup.MergeOrganizations == false)
+                return;
+                
+            var mergedOrg = resourceGroup.Group.First().Org;
+            // select the first contact that is NOT in the set of contacts to keep
+            // this is the contact to use for merging
+            var mergedContact = mergedOrg.ResourceContacts.First(x => !resourceGroup.ContactsToKeep.Contains(x));
+
+            // update remaining resource records in the group to use the mergeOrg id
+            foreach (var contact in mergedOrg.ResourceContacts)
+            {
+                // skip the resource we are merging into
+                if (contact.Id == mergedContact.Id)
+                    continue;
+
+                // if contact in keep list, do not merge it with the
+                if (!resourceGroup.ContactsToKeep.Contains(contact))
+                {
+                    // use other records in the group to fill in any contact missing data
+                    MergeContactFields(mergedContact, contact);
+
+                    // remove contact resource reference (ContactWithResources) and
+                    // delete contact 
+                    RmsRepository.DeleteContact(contact);
+                }
+            }
+        }
     }
 }

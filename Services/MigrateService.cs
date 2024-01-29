@@ -1,6 +1,8 @@
-﻿using MigrateTOUData.Data.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using MigrateTOUData.Data.Database;
 using MigrateTOUData.Data.Models;
 using MigrateTOUData.Services.Contracts;
+using MigrateTOUData.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,17 @@ namespace MigrateTOUData.Services
     {
         public void Migrate()
         {
+            var groupByResourceUrlQuery =
+                from resource in dbContext.ResourcePrograms
+                orderby resource.ResourceCode
+                group resource by resource.ResourceUrl into dupResource
+                where dupResource.Count() > 1
+                select new DuplicateResourceGroup(dupResource);
+
+        }
+
+        private void Populate()
+        { 
             Console.WriteLine("Start Migration");
             try
             {
