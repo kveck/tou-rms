@@ -38,11 +38,11 @@ GO
 CREATE TABLE rms.region_taxonomy_contact_xref(
 id int IDENTITY(1,1),
 region_taxonomy_id int NOT NULL,
-contact_id int NOT NULL,
+resource_contact_id int NOT NULL,
 
 CONSTRAINT pk_regiontaxon_contact_xref PRIMARY KEY(id),
 CONSTRAINT fk_region_taxon_id_contact FOREIGN KEY (region_taxonomy_id) REFERENCES rms.region_taxonomy(taxonomy_id),
-CONSTRAINT fk_contact_id_region FOREIGN KEY (contact_id) REFERENCES rms.resource_contact(id),
+CONSTRAINT fk_contact_id_region FOREIGN KEY (resource_contact_id) REFERENCES rms.resource_contact_xref(id),
 -- constraint so each contact cannot have duplicate regions
 CONSTRAINT uq_contact_region UNIQUE(region_taxonomy_id, contact_id)
 );

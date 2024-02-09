@@ -71,6 +71,8 @@ GO
 INSERT INTO rms.resource_status_type(status_type) 
 	VALUES 
 	('Verified'),
+	('Expired'),
+	('Invalid'),
 	('Deleted'),
 	('Pending');
 GO

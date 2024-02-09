@@ -28,5 +28,20 @@ namespace MigrateTOUData.Data.Database
         {
             throw new NotImplementedException();
         }
+
+        internal static void GetCityTaxonomyId(string city, string state)
+        {
+            using (var dbContext = new RmsDbContext())
+            {
+                var stateRegionQuery = dbContext
+                    .RegionTaxonomies
+                    .Where(a => a.Region.Equals(state) && 
+                                dbContext.RegionTaxonomies
+                                    .Where(b => b.Region.Equals(city) &&
+                                        b.TaxonomyLeft > a.TaxonomyLeft &&
+                                        b.TaxonomyLeft < a.TaxonomyRight)
+                                    .Count() == 1);                        
+            }
+        }
     }
 }

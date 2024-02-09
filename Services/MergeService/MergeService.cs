@@ -14,7 +14,12 @@ namespace MigrateTOUData.Services.Merge
 {
     internal class MergeService : IMergeService
     {
-        // constructor should use DI to pass in repository class to do all db work
+        //TODO: constructor should use DI to pass in repository class to do all db work
+
+        /// <summary>
+        /// Implementation for the merging of duplicate resources that
+        /// were created by the Migration task
+        /// </summary>
         void IMergeService.Merge()
         {
             var groupByResourceUrlQuery =
@@ -30,7 +35,7 @@ namespace MigrateTOUData.Services.Merge
                 if (resourceGroup == null)
                     continue;
 
-                // merge the organizations for the resource group, if needed
+                // merge the duplicate organizations for the resource group, if needed
                 if (resourceGroup.MergeOrganizations)
                     MergeOrganization(resourceGroup);
 
@@ -43,6 +48,10 @@ namespace MigrateTOUData.Services.Merge
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resourceGroup"></param>
         private void MergeOrganization(DuplicateResourceGroup resourceGroup)
         {
             // skip the group if not flagged for organization merging
