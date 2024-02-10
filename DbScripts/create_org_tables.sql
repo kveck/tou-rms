@@ -84,7 +84,7 @@ resource_id int NOT NULL,
 status_type_id int NOT NULL,
 [timestamp] datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 notes nvarchar(1024), -- optional note about the status change
-cms_user nvarchar(128), -- not sure what this field is yet, need user from CMS system
+[user] nvarchar(128), -- not sure what this field is yet, need user from CRM system
 
 CONSTRAINT pk_resource_status_id PRIMARY KEY(id),
 CONSTRAINT fk_status_type_id FOREIGN KEY (status_type_id) REFERENCES rms.resource_status_type(id),
@@ -225,7 +225,7 @@ id int IDENTITY(1,1),
 resource_id int NOT NULL,
 activity_type_id int NOT NULL,
 activity_detail_id int NOT NULL,
-cms_user nvarchar(128) NOT NULL,
+[user] nvarchar(128) NOT NULL,
 [timestamp] datetime2(3) DEFAULT(getutcdate()) NOT NULL, -- stored value is UTC
 
 CONSTRAINT pk_resource_resource_activity PRIMARY KEY(id),
