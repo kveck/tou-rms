@@ -2,6 +2,12 @@ USE touResourceDatabase
 GO
 
 -- drop fk constraints
+ALTER TABLE [rms].[resource_program] DROP CONSTRAINT [fk_resource_detail_id]
+GO
+ALTER TABLE [rms].[profile_taxonomy_resource_xref] DROP CONSTRAINT [fk_tou_profile_taxon_id]
+GO
+ALTER TABLE [rms].[profile_taxonomy_resource_xref] DROP CONSTRAINT [fk_resource_id_tou_profile_taxonomy]
+GO
 ALTER TABLE [rms].[resource_program_steps] DROP CONSTRAINT [fk_resource_id_steps]
 GO
 ALTER TABLE [rms].[resource_program_status] DROP CONSTRAINT [fk_status_type_id]
@@ -62,6 +68,7 @@ DROP TABLE IF EXISTS rms.region_taxonomy_contact_xref;
 DROP TABLE IF EXISTS rms.region_taxonomy_resource_xref;
 DROP TABLE IF EXISTS rms.service_taxonomy_resource_xref;
 DROP TABLE IF EXISTS rms.situation_taxonomy_resource_xref;
+DROP TABLE IF EXISTS [rms].[profile_taxonomy_resource_xref];
 DROP TABLE IF EXISTS rms.resource_application_type_xref;
 DROP TABLE IF EXISTS rms.resource_language_xref;
 DROP TABLE IF EXISTS rms.contact_language_xref;
@@ -70,6 +77,7 @@ GO
 DROP TABLE IF EXISTS rms.region_taxonomy;
 DROP TABLE IF EXISTS rms.situation_taxonomy;
 DROP TABLE IF EXISTS rms.service_taxonomy;
+DROP TABLE IF EXISTS [rms].[profile_taxonomy];
 DROP TABLE IF EXISTS rms.resource_application_type;
 DROP TABLE IF EXISTS rms.resource_process_time;
 DROP TABLE IF EXISTS rms.resource_status;
